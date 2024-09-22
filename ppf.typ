@@ -1,44 +1,46 @@
 #set text(font: "Times New Roman", size: 12pt, hyphenate: false)
 
-// #align(center)[
-//   #set text(size: 18pt)
-//   *Real-time Global Illumination and Dynamic Compute-Centric Vector Graphics in Games*
-// ]
+#align(center)[
+  #set text(size: 18pt)
+  #underline[*DRAFT PROJECT PROPOSAL FORM*]
 
-#align(right)[
-  #move(dx: 20pt, dy: -40pt)[
-    #box(width: 80%)[
-      #align(left)[
-        #grid(
-          columns: (1fr, 1fr),
-          stroke: black,
-          inset: 0.65em,
-          [
-            *Office Record* \
-            Date Received: \
-            Received by whom: \
-          ],
-          [
-            *Receipt* \
-            Student Name: Cheng Yi Heng \
-            Student Number: TP058994 \
-            Received by: \
-            Date: \
-          ],
-        )
-      ]
-
-      #align(left + bottom)[
-        #stack(
-          dir: ltr,
-          image("assets/apu-logo.png", width: 30%),
-          align(top)[#underline[*DRAFT PROJECT PROPOSAL FORM*]],
-        )
-      ]
-
-    ]
-  ]
+  #image("assets/apu-logo.png", width: 50%)
 ]
+
+// #align(right)[
+//   #move(dx: 20pt, dy: -40pt)[
+//     #box(width: 80%)[
+//       #align(left)[
+//         #grid(
+//           columns: (1fr, 1fr),
+//           stroke: black,
+//           inset: 0.65em,
+//           [
+//             *Office Record* \
+//             Date Received: \
+//             Received by whom: \
+//           ],
+//           [
+//             *Receipt* \
+//             Student Name: Cheng Yi Heng \
+//             Student Number: TP058994 \
+//             Received by: \
+//             Date: \
+//           ],
+//         )
+//       ]
+
+//       #align(left + bottom)[
+//         #stack(
+//           dir: ltr,
+//           image("assets/apu-logo.png", width: 30%),
+//           align(top)[#underline[*DRAFT PROJECT PROPOSAL FORM*]],
+//         )
+//       ]
+
+//     ]
+//   ]
+// ]
 
 #text(weight: "bold")[
   #grid(
