@@ -1,8 +1,59 @@
 #set text(font: "Times New Roman", size: 12pt, hyphenate: false)
 
-#align(center)[
-  #set text(size: 18pt)
-  *Real-time Global Illumination and Dynamic Compute-Centric Vector Graphics in Games*
+// #align(center)[
+//   #set text(size: 18pt)
+//   *Real-time Global Illumination and Dynamic Compute-Centric Vector Graphics in Games*
+// ]
+
+#align(right)[
+  #move(dx: 20pt, dy: -40pt)[
+    #box(width: 80%)[
+      #align(left)[
+        #grid(
+          columns: (1fr, 1fr),
+          stroke: black,
+          inset: 0.65em,
+          [
+            *Office Record* \
+            Date Received: \
+            Received by whom: \
+          ],
+          [
+            *Receipt* \
+            Student Name: Cheng Yi Heng \
+            Student Number: TP058994 \
+            Received by: \
+            Date: \
+          ],
+        )
+      ]
+
+      #align(left + bottom)[
+        #stack(
+          dir: ltr,
+          image("assets/apu-logo.png", width: 30%),
+          align(top)[#underline[*DRAFT PROJECT PROPOSAL FORM*]],
+        )
+      ]
+
+    ]
+  ]
+]
+
+#text(weight: "bold")[
+  #grid(
+    columns: (auto, auto, 1fr),
+    inset: 0.65em,
+    [Proposal ID], [:], [],
+    [Supervisor], [:], [],
+    [Student Name], [:], [Cheng Yi Heng],
+    [Student No], [:], [TP058994],
+    [Email Address], [:], [tp058994\@mail.epu.edu.my],
+    [Programme Name], [:], [Computer Games Development (CGD)],
+    [Title of Project],
+    [:],
+    [Real-time Global Illumination and Dynamic Compute-Centric Vector Graphics in Games],
+  )
 ]
 
 #pagebreak()
@@ -70,7 +121,7 @@ However, the major issue still exists for these techniques --- scalability to la
 
 #figure(caption: [Vector vs Bitmap graphics @arneratermanis2017])[#image("assets/vector-vs-bitmap.png")] <vector-vs-bitmap>
 
-Traditional methods of rendering 2D graphics had always relied on bitmap-based texture mapping @ray2005vector.
+Traditional methods of rendering 2D graphics has always relied on bitmap-based texture mapping @ray2005vector.
 While this approach is ubiquitous, it suffers a major drawback of the _pixelation_ effect when being scaled beyond the original resolution @nehab2008random.
 Furthermore, creating animations using bitmap graphics can be extremely limited and complex because of the rigid grid-like data structure used to store the data.
 Animating bitmap graphics are commonly done through the use of shaders which directly manipulates the individual pixels, or relying on image sequences (flipbooks) which produces an illusion of movement.
@@ -135,6 +186,101 @@ The objectives of this project are:
 
 = Literature Review
 
+== Vector Graphics
+
+Scanline rendering is the process of shooting rays from one side of the screen to the other while coloring pixels in between based on collision checkings with paths in between.
+A GPU based scanline rasterization method is proposed by parallelizing over _boundary fragments_ while bulk processing non-boundary fragments as horizontal spans @li2016efficient.
+This method allows fully animated vector graphics to be rendered in interactive frame rates.
+
+Apart from scanline rasterization, tesselation method can also be used to convert vector graphics into triangles and then pushed to the GPU for hardware accelerated rasterization.
+#cite(<loop2005resolution>, form: "prose") further improved this method by removing the need of approximating curve segments into lines.
+Instead, each curve segments is evalulated in a _fragment shader_ which can be calculated on the GPU.
+This allows for extreme zoom levels without sacrificing qualities.
+
+Re-tesselation of vector graphics can be computationally expensive, especially when it's inherently a serial algorithm that often needs to be solved on the CPU.
+#cite(<kokojima2006resolution>, form: "prose") combines the work of #cite(<loop2005resolution>, form: "prose") with the usage of GPU's stencil buffer by using _triangle fans_ to skip the tesselation process.
+This approch, however, does not extend to cubic Bézier segments as they might not be convex.
+#cite(<rueda2008gpu>, form: "prose") addressed this issue by implementing a fragment shader that evaluates the implicit equation of the Bézier curve to discard the pixels that fall outside it.
+The two-step "Stencil then Cover" (StC) method builds upon all of these work and unified path rendering with OpenGL's shading pipeline --- #text(font: "Consolas")[NV_path_rendering] @kilgard2012gpu.
+This library was further improved upon by adding support for transparency groups, patterns, gradients, more color spaces, etc. @batra2015accelerating.
+It was eventually integrated into Adobe Illustrator.
+
+// TODO: Vector textures
+// TODO: Other solutions as well (Skia, Pathfinder, etc.)
+
+/*
+Vector Graphics
+- Scanline
+- Triangulation
+- Stencil then Cover (StC)
+- Further improved and applied to real world application like Adobe Illustrator
+- ^ Composition, Gradients
+- Vector texture
+- Massively parallel
+*/
+
+== Interactive UI/UX
+
+Beneath all graphical interfaces lies the underlying code that structure and renders the visual elements.
+The two most notable approach towards creating user interface frameworks are immediate-mode graphical user interface (IMGUI) and retained-mode graphical user interface (RMGUI).
+Some popular IMGUI frameworks includes Dear IMGUI and egui @imgui @egui, while some popular RMGUI frameworks includes Xilem @xilem.
+Although powerful, these UI frameworks strongly relies on hardcoded programming.
+
+Enter the web technologies.
+Modern browsers typically render UI elements using markup languages like HTML and SVG for structuring the content and style-sheets like CSS for styling them.
+The use of markup structures allows developers to fully separate their UI layout from the codebase, simplifying the identification and management of UI components.
+With style sheets, developers can create, share, and reuse templates, enhancing consistency and streamlining the design process throughout the application.
+// TODO: explore in more detail on each framework
+Notable frameworks that utilizes this model includes Unity UI Toolkit, React, Vue, etc @jacobsen2023 @react @vue.
+
+Markup languages also give rise to many WYSIWYG editors.
+These editors let users perform drag and drop actions to layout UI for quick prototyping as each components can now be represented using only markup syntax (no code required).
+
+A major limitation of simple markup languages like HTML is that structure changes can only be achieved through code.
+For example, if you want a form to disappear after button press, you would need to alter the HTML via code.
+Typst offers an alternative towards this problem by introducing programming capabilities into markdown.
+
+Typst is a competitor of LaTeX, designed to simplify the typesetting process with a modern and intuitive approach.
+Unlike its predecessors, Typst can directly embed logic.
+Using the previous example, developers would only need to pass in a boolean value and Typst will automatically exclude the form from being in the layout at all.
+This currently works only in theory, as Typst is primarily a document generator without a user-friendly interface for modifying defined variables.
+
+This is where our project comes in, we aim to provide this interface through Velyst, which couple Typst with Vello for rendering dynamic and programmable content in real-time.
+
+/*
+Interactive UI/UX
+- From code to markup to css styling
+- Research on WYSIWYG editors
+- Explore competitors: LaTeX
+*/
+
+== Global Illumination
+
+Ray tracing is the de-facto standard for calculating light bounces which contributes to global illumination.
+Clever methods like backwards ray tracing has been introduced to speed up the algorithm, but still, it is no where near real-time frame rates @arvo1986backward.
+Light baking is introduced to solve this issue, however, it lacks the ability to adapt to runtime scene changes.
+
+Recent studies has shown great results of utilizing neural networks for approximating global illumination @choi2024baking.
+// TODO: add more sources to support the claim
+However, neural network based methods tend to suffer from unpredictability as the output is highly basd upon the input training data, making it unreliable.
+
+Recent works by #cite(<mcguire2017real>, form: "prose") places light field probes around the scene to encode lighting information from static objects and sample them in real-time.
+Dynamic diffuse global illumination (DDGI) further improves this technique by allowing light field probes to update dynamically based on scene changes @majercik2019dynamic.
+
+
+Radiance cascades improves upon this technique by using a hierarchical structure to place light probes @osborne2024radiance.
+This technique is based upon the _penumbra condition_, where closer distance require low angular resolution and high spatial resolution while further distance require high angular resolution and low spatial resolution.
+
+/*
+Global illumination
+- Backwards Ray Tracing
+- Light baking
+- Light probes
+- Adaptive probes volumes (only capture local volumes)
+- Voxell GI
+- SDF GI
+*/
+
 #pagebreak()
 
 = Deliverables
@@ -171,4 +317,7 @@ A library will also be created that utilizes the *Radiance Cascades* technique f
 // Data Gathering Design:
 // 2 techniques
 
-#bibliography("citation.bib", style: "apa", title: "References")
+#pagebreak()
+
+= References
+#bibliography("citation.bib", style: "apa", title: none)
